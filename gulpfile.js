@@ -19,7 +19,7 @@ var gulp = require('gulp'),
 
 gulp.task('sass', function () {
     return gulp.src('app/scss/*.scss')
-        .pipe(sass())
+        .pipe(sass().on('error', sass.logError))
         .pipe(autoprefixer(['last 15 versions'], {cascade: true}))
         .pipe(gcmq())
         .pipe(gulp.dest('app/css'))
@@ -59,7 +59,7 @@ gulp.task('clear', function () {
 });
 
 gulp.task('watch', ['browser-sync', 'scripts', 'css-libs', 'sass'], function () {
-    gulp.watch('app/scss/*.scss', ['sass']);
+    gulp.watch('app/scss/**/*.scss', ['sass']);
     gulp.watch('app/*.html', browserSync.reload);
     gulp.watch('app/js/*.js', browserSync.reload);
 
@@ -67,12 +67,6 @@ gulp.task('watch', ['browser-sync', 'scripts', 'css-libs', 'sass'], function () 
 
 gulp.task('img', function () {
     return gulp.src('app/img/**/*')
-        .pipe(cache(imagemin({
-            interlaced: true,
-            progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()]
-        })))
         .pipe(gulp.dest('dist/img'));
 });
 
